@@ -3,11 +3,14 @@ var grid = [];
 var WIDTH = 200;
 var HEIGHT = 100;
 
-var CELL_R = 2
+var CELL_R = 3
 
 var RULES = {born: [2], survives: [3, 4]};
 
-var DELAY = 0;
+var DELAY = 100;
+
+var COLOR_BG = "black";
+var COLOR_FG = "green";
 
 var canvas = document.querySelector("canvas");
 var context = canvas.getContext("2d");
@@ -105,9 +108,10 @@ function sleep(milliseconds) {
 }
 
 function drawGrid() {
-    context.fillStyle = "white";
-    context.fillRect(0, 0, WIDTH * 2 * CELL_R, HEIGHT * 2 * CELL_R);
-    context.fillStyle = "black"
+    context.fillStyle = COLOR_BG;
+    context.fillRect(0, 0,
+            WIDTH * 2 * CELL_R + CELL_R, HEIGHT * 2 * CELL_R + CELL_R);
+    context.fillStyle = COLOR_FG;
 
     for (var i = 0; i < WIDTH; i++) {
         for (var j = 0; j < HEIGHT; j++) {
