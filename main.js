@@ -1,12 +1,13 @@
 var grid = [];
 
-var WIDTH = 200;
-var HEIGHT = 100;
+var WIDTH = 300;
+var HEIGHT = 150;
 
-var CELL_R = 3
+var CELL_R = 2
 
-var RULES = {born: [2], survives: [3, 4]};
+//var RULES = {born: [2], survives: [3, 4]};
 //var RULES = {born: [3], survives: [2, 3]};
+var RULES = {born: [1, 2], survives: [1]};
 
 var DELAY = 100;
 
@@ -19,7 +20,7 @@ var canvas = document.querySelector("canvas");
 var context = canvas.getContext("2d");
 
 function init() {
-    initializeGrid();
+    initializeGridSingle();
     window.requestAnimationFrame(updateGrid);
 }
 
@@ -30,6 +31,17 @@ function initializeGrid() {
             grid[i][j] = {alive: Math.random() < 0.5};
         }
     }
+}
+
+function initializeGridSingle() {
+    for (var i = 0; i < WIDTH; i++) {
+        grid[i] = []
+        for (var j = 0; j < HEIGHT; j++) {
+            grid[i][j] = {alive: false};
+        }
+    }
+
+    grid[Math.floor(WIDTH / 2)][Math.floor(HEIGHT / 2)].alive = true;
 }
 
 function updateGrid() {
