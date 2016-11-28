@@ -6,11 +6,14 @@ var HEIGHT = 100;
 var CELL_R = 3
 
 var RULES = {born: [2], survives: [3, 4]};
+//var RULES = {born: [3], survives: [2, 3]};
 
 var DELAY = 100;
 
 var COLOR_BG = "black";
 var COLOR_FG = "green";
+
+var TYPE = "hex"; // "hex" or "rect"
 
 var canvas = document.querySelector("canvas");
 var context = canvas.getContext("2d");
@@ -34,7 +37,14 @@ function updateGrid() {
     for (var i = 0; i < WIDTH; i++) {
         newGrid[i] = []
         for (var j = 0; j < HEIGHT; j++) {
-            var nc = neighborCountHex(grid, i, j);
+            var nc = 0;
+
+            if (TYPE == "hex") {
+                nc = neighborCountHex(grid, i, j);
+            }
+            else {
+                nc = neighborCount(grid, i, j);
+            }
 
             newGrid[i][j] = {alive: grid[i][j].alive};
 
@@ -116,16 +126,24 @@ function drawGrid() {
     for (var i = 0; i < WIDTH; i++) {
         for (var j = 0; j < HEIGHT; j++) {
             if (grid[i][j].alive) {
-                drawCellAsCircle(context, i, j);
+                if (TYPE == "hex") {
+                    drawCellAsCircle(context, i, j);
+                }
+                else {
+                    drawCellAsRect(context, i, j);
+                }
             }
         }
     }
 }
 
 function drawCellAsRect(context, i, j) {
-    context.fillRect(
-        i * CELL_R,
-        j * CELL_R, CELL_R, CELL_R);
+    context.beginPath();
+    context.arc(i * 2 * CELL_R + CELL_R,
+                j * 2 * CELL_R + CELL_R,
+                CELL_R,
+                0, 2 * Math.PI);
+    context.fill();
 }
 
 function drawCellAsCircle(context, i, j) {
