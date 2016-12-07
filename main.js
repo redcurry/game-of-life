@@ -1,15 +1,13 @@
 var grid = [];
 
 var WIDTH = 300;
-var HEIGHT = 150;
+var HEIGHT = 300;
 
 var CELL_R = 2
 
-//var RULES = {born: [2], survives: [3, 4]};
-//var RULES = {born: [3], survives: [2, 3]};
 var RULES = {born: [1, 2], survives: [1]};
 
-var DELAY = 100;
+var DELAY = 1000;
 
 var COLOR_BG = "black";
 var COLOR_FG = "green";
@@ -19,12 +17,15 @@ var TYPE = "hex"; // "hex" or "rect"
 var canvas = document.querySelector("canvas");
 var context = canvas.getContext("2d");
 
-function init() {
-    initializeGridSingle();
-    window.requestAnimationFrame(updateGrid);
+var then = Date.now();
+
+function main() {
+    initGridWithSingleCell();
+    updateAndDrawGrid();
+    animate();
 }
 
-function initializeGrid() {
+function initGridWithRandomCells() {
     for (var i = 0; i < WIDTH; i++) {
         grid[i] = []
         for (var j = 0; j < HEIGHT; j++) {
@@ -33,7 +34,7 @@ function initializeGrid() {
     }
 }
 
-function initializeGridSingle() {
+function initGridWithSingleCell() {
     for (var i = 0; i < WIDTH; i++) {
         grid[i] = []
         for (var j = 0; j < HEIGHT; j++) {
@@ -44,10 +45,29 @@ function initializeGridSingle() {
     grid[Math.floor(WIDTH / 2)][Math.floor(HEIGHT / 2)].alive = true;
 }
 
+function animate() {
+    var now = Date.now();
+    var elapsed = now - then;
+
+    if (elapsed > DELAY) {
+        updateAndDrawGrid();
+        then = now;
+    }
+
+    window.requestAnimationFrame(animate);
+}
+
+function updateAndDrawGrid() {
+    updateGrid();
+    drawGrid();
+}
+
 function updateGrid() {
     var newGrid = []
+
     for (var i = 0; i < WIDTH; i++) {
         newGrid[i] = []
+
         for (var j = 0; j < HEIGHT; j++) {
             var nc = 0;
 
@@ -58,25 +78,18 @@ function updateGrid() {
                 nc = neighborCount(grid, i, j);
             }
 
-            newGrid[i][j] = {alive: grid[i][j].alive};
+            newGrid[i][j] = {alive: false};
 
             if (grid[i][j].alive) {
-                newGrid[i][j].alive =
-                    RULES.survives.indexOf(nc) != -1;
+                newGrid[i][j].alive = RULES.survives.indexOf(nc) != -1;
             }
             else {
-                newGrid[i][j].alive =
-                    RULES.born.indexOf(nc) != -1;
+                newGrid[i][j].alive = RULES.born.indexOf(nc) != -1;
             }
         }
     }
 
     grid = newGrid;
-    drawGrid();
-
-    sleep(DELAY);
-
-    window.requestAnimationFrame(updateGrid);
 }
 
 function neighborCount(grid, i, j) {
@@ -118,15 +131,6 @@ function neighborCountHex(grid, i, j) {
                                  grid[x[0]][x[1]].alive; });
 
     return neighbors.length;
-}
-
-function sleep(milliseconds) {
-      var start = new Date().getTime();
-        for (var i = 0; i < 1e7; i++) {
-                if ((new Date().getTime() - start) > milliseconds){
-                          break;
-                              }
-                  }
 }
 
 function drawGrid() {
@@ -175,4 +179,4 @@ function drawCellAsCircle(context, i, j) {
     context.fill();
 }
 
-init();
+main();
