@@ -7,8 +7,6 @@ var CELL_R = 2
 
 var RULES = {born: [1, 2], survives: [1]};
 
-var DELAY = 1000;
-
 var COLOR_BG = "black";
 var COLOR_FG = "green";
 
@@ -17,12 +15,22 @@ var TYPE = "hex"; // "hex" or "rect"
 var canvas = document.querySelector("canvas");
 var context = canvas.getContext("2d");
 
+var delay = 1000;
+
 var then = Date.now();
 
 function main() {
+    addEventListeners();
     initGridWithSingleCell();
     updateAndDrawGrid();
     animate();
+}
+
+function addEventListeners() {
+    var delaySlider = document.getElementById("delaySlider");
+    delaySlider.addEventListener("input", function() {
+        delay = delaySlider.value;
+    });
 }
 
 function initGridWithRandomCells() {
@@ -49,7 +57,7 @@ function animate() {
     var now = Date.now();
     var elapsed = now - then;
 
-    if (elapsed > DELAY) {
+    if (elapsed > delay) {
         updateAndDrawGrid();
         then = now;
     }
