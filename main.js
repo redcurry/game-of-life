@@ -44,6 +44,13 @@ function addEventListeners() {
             startAndPauseButton.value = "Play";
         }
     });
+
+    var nextGenerationButton = document.getElementById("nextGenerationButton");
+    nextGenerationButton.addEventListener("click", function() {
+        if (isPaused) {
+            updateAndDrawGrid();
+        }
+    });
 }
 
 function initGridWithRandomCells() {
