@@ -16,6 +16,7 @@ var canvas = document.querySelector("canvas");
 var context = canvas.getContext("2d");
 
 var delay = 1000;
+var isPaused = false;
 
 var then = Date.now();
 
@@ -30,6 +31,18 @@ function addEventListeners() {
     var delaySlider = document.getElementById("delaySlider");
     delaySlider.addEventListener("input", function() {
         delay = delaySlider.value;
+    });
+
+    var startAndPauseButton = document.getElementById("startAndPauseButton");
+    startAndPauseButton.addEventListener("click", function() {
+        if (startAndPauseButton.value == "Play") {
+            isPaused = false;
+            animate();
+            startAndPauseButton.value = "Pause";
+        } else {
+            isPaused = true;
+            startAndPauseButton.value = "Play";
+        }
     });
 }
 
@@ -62,7 +75,9 @@ function animate() {
         then = now;
     }
 
-    window.requestAnimationFrame(animate);
+    if (!isPaused) {
+        window.requestAnimationFrame(animate);
+    }
 }
 
 function updateAndDrawGrid() {
