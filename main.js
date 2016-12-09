@@ -28,6 +28,16 @@ function main() {
 }
 
 function addEventListeners() {
+    var resetSingleButton = document.getElementById("resetSingleButton");
+    resetSingleButton.addEventListener("click", function() {
+        initGridWithSingleCell();
+    });
+
+    var resetRandomButton = document.getElementById("resetRandomButton");
+    resetRandomButton.addEventListener("click", function() {
+        initGridWithRandomCells();
+    });
+
     var delaySlider = document.getElementById("delaySlider");
     delaySlider.addEventListener("input", function() {
         delay = delaySlider.value;
@@ -84,6 +94,7 @@ function addEventListeners() {
 }
 
 function initGridWithRandomCells() {
+    grid = []
     for (var i = 0; i < WIDTH; i++) {
         grid[i] = []
         for (var j = 0; j < HEIGHT; j++) {
@@ -93,6 +104,7 @@ function initGridWithRandomCells() {
 }
 
 function initGridWithSingleCell() {
+    grid = []
     for (var i = 0; i < WIDTH; i++) {
         grid[i] = []
         for (var j = 0; j < HEIGHT; j++) {
