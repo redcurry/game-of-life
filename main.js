@@ -5,7 +5,7 @@ var HEIGHT = 300;
 
 var CELL_R = 2
 
-var RULES = {born: [1, 2], survives: [1]};
+var RULES = {born: [1, 4], survives: [4, 5]};
 
 var COLOR_BG = "black";
 var COLOR_FG = "green";
@@ -51,6 +51,36 @@ function addEventListeners() {
             updateAndDrawGrid();
         }
     });
+
+    for (var i = 1; i <= 6; i++) {
+        var bornCheckbox = document.getElementById("born" + i + "Checkbox");
+        bornCheckbox.checked = RULES.born.indexOf(i) != -1;
+        bornCheckbox.addEventListener("change", function(e) {
+            var checkbox = e.target;
+            var n = parseInt(checkbox.value, 10);
+            var index = RULES.born.indexOf(n);
+            if (checkbox.checked && index == -1) {
+                RULES.born.push(n);
+            } else if (!checkbox.checked && index != -1) {
+                RULES.born.splice(index, 1);
+            }
+        });
+    }
+
+    for (var i = 1; i <= 6; i++) {
+        var survivesCheckbox = document.getElementById("survives" + i + "Checkbox");
+        survivesCheckbox.checked = RULES.survives.indexOf(i) != -1;
+        survivesCheckbox.addEventListener("change", function(e) {
+            var checkbox = e.target;
+            var n = parseInt(checkbox.value, 10);
+            var index = RULES.survives.indexOf(n);
+            if (checkbox.checked && index == -1) {
+                RULES.survives.push(n);
+            } else if (!checkbox.checked && index != -1) {
+                RULES.survives.splice(index, 1);
+            }
+        });
+    }
 }
 
 function initGridWithRandomCells() {
