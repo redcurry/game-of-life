@@ -41,9 +41,12 @@ function addEventListeners() {
     });
 
     var delaySlider = document.getElementById("delaySlider");
+    var delayLabel = document.getElementById("delayLabel");
     delaySlider.value = delay;
+    delayLabel.innerText = delay + " ms";
     delaySlider.addEventListener("input", function() {
         delay = delaySlider.value;
+        delayLabel.innerText = delay + " ms";
     });
 
     var startAndPauseButton = document.getElementById("startAndPauseButton");
