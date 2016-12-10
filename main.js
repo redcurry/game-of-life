@@ -15,7 +15,7 @@ var TYPE = "hex"; // "hex" or "rect"
 var canvas = document.querySelector("canvas");
 var context = canvas.getContext("2d");
 
-var delay = 1000;
+var delay = 500;
 var isPaused = false;
 
 var then = Date.now();
@@ -41,6 +41,7 @@ function addEventListeners() {
     });
 
     var delaySlider = document.getElementById("delaySlider");
+    delaySlider.value = delay;
     delaySlider.addEventListener("input", function() {
         delay = delaySlider.value;
     });
