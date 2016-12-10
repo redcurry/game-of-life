@@ -10,7 +10,7 @@ var RULES = {born: [1, 4], survives: [4, 5]};
 var COLOR_BG = "black";
 var COLOR_FG = "green";
 
-var TYPE = "hex"; // "hex" or "rect"
+var type = "hex"; // "hex" or "rect"
 
 var canvas = document.querySelector("canvas");
 var context = canvas.getContext("2d");
@@ -28,6 +28,28 @@ function main() {
 }
 
 function addEventListeners() {
+    var squareRadio = document.getElementById("squareRadio");
+    squareRadio.checked = (type == "rect") ? true : false;
+    squareRadio.addEventListener("change", function() {
+        if (squareRadio.checked) {
+            type = "rect";
+        } else {
+            type = "hex";
+        }
+        drawGrid();
+    });
+
+    var hexRadio = document.getElementById("hexRadio");
+    hexRadio.checked = (type == "hex") ? true : false;
+    hexRadio.addEventListener("change", function() {
+        if (hexRadio.checked) {
+            type = "hex";
+        } else {
+            type = "rect";
+        }
+        drawGrid();
+    });
+
     var resetSingleButton = document.getElementById("resetSingleButton");
     resetSingleButton.addEventListener("click", function() {
         initGridWithSingleCell();
@@ -149,7 +171,7 @@ function updateGrid() {
         for (var j = 0; j < HEIGHT; j++) {
             var nc = 0;
 
-            if (TYPE == "hex") {
+            if (type == "hex") {
                 nc = neighborCountHex(grid, i, j);
             }
             else {
@@ -220,7 +242,7 @@ function drawGrid() {
     for (var i = 0; i < WIDTH; i++) {
         for (var j = 0; j < HEIGHT; j++) {
             if (grid[i][j].alive) {
-                if (TYPE == "hex") {
+                if (type == "hex") {
                     drawCellAsCircle(context, i, j);
                 }
                 else {
