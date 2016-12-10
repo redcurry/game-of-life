@@ -31,11 +31,13 @@ function addEventListeners() {
     var resetSingleButton = document.getElementById("resetSingleButton");
     resetSingleButton.addEventListener("click", function() {
         initGridWithSingleCell();
+        drawGrid();
     });
 
     var resetRandomButton = document.getElementById("resetRandomButton");
     resetRandomButton.addEventListener("click", function() {
         initGridWithRandomCells();
+        drawGrid();
     });
 
     var delaySlider = document.getElementById("delaySlider");
