@@ -5,7 +5,7 @@ var HEIGHT = 300;
 
 var CELL_R = 2
 
-var RULES = {born: [1, 4], survives: [4, 5]};
+var RULES = {born: [1, 2], survives: [2, 4]};
 
 var COLOR_BG = "black";
 var COLOR_FG = "green";
@@ -235,8 +235,16 @@ function neighborCountHex(grid, i, j) {
 
 function drawGrid() {
     context.fillStyle = COLOR_BG;
-    context.fillRect(0, 0,
-            WIDTH * 2 * CELL_R + CELL_R, HEIGHT * 2 * CELL_R + CELL_R);
+
+    if (type == "rect") {
+        context.fillRect(0, 0,
+                WIDTH * 2 * CELL_R + CELL_R, HEIGHT * 2 * CELL_R + CELL_R);
+    } else {
+        context.fillRect(0, 0,
+                WIDTH * 2 * CELL_R + CELL_R,
+                HEIGHT * Math.sqrt(3) * CELL_R + CELL_R);
+    }
+
     context.fillStyle = COLOR_FG;
 
     for (var i = 0; i < WIDTH; i++) {
@@ -266,13 +274,13 @@ function drawCellAsCircle(context, i, j) {
     context.beginPath();
     if (j % 2 == 0) {
         context.arc(i * 2 * CELL_R + CELL_R,
-                    j * 2 * CELL_R + CELL_R - (2 - CELL_R * Math.sqrt(2)),
+                    j * Math.sqrt(3) * CELL_R + CELL_R,
                     CELL_R,
                     0, 2 * Math.PI);
     }
     else {
         context.arc(i * 2 * CELL_R + CELL_R + CELL_R,
-                    j * 2 * CELL_R + CELL_R - (2 - CELL_R * Math.sqrt(2)),
+                    j * Math.sqrt(3) * CELL_R + CELL_R,
                     CELL_R,
                     0, 2 * Math.PI);
     }
