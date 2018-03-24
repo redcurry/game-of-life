@@ -8,7 +8,11 @@ var CELL_R = 2
 var RULES = {born: [1, 2], survives: [2, 4]};
 
 var COLOR_BG = "black";
-var COLOR_FG = "green";
+var COLOR_FG = "white";
+
+var isColored = false; // works only for "hex"
+var COLORS = ["red", "orange", "yellow", "green", "blue", "purple"];
+var color_i = -1;
 
 var type = "hex"; // "hex" or "rect"
 
@@ -136,7 +140,7 @@ function initGridWithSingleCell() {
     for (var i = 0; i < WIDTH; i++) {
         grid[i] = []
         for (var j = 0; j < HEIGHT; j++) {
-            grid[i][j] = {alive: false};
+            grid[i][j] = {alive: false, color: COLOR_FG};
         }
     }
 
@@ -178,7 +182,7 @@ function updateGrid() {
                 nc = neighborCount(grid, i, j);
             }
 
-            newGrid[i][j] = {alive: false};
+            newGrid[i][j] = {alive: false, color: COLOR_FG};
 
             if (grid[i][j].alive) {
                 newGrid[i][j].alive = RULES.survives.indexOf(nc) != -1;
@@ -211,10 +215,15 @@ function neighborCount(grid, i, j) {
 }
 
 function neighborCountHex(grid, i, j) {
+    var neighbors = liveNeighborsHex(grid, i, j);
+    return neighbors.length;
+}
+
+function liveNeighborsHex(grid, i, j) {
     var neighbors = [
         [i, j - 1], [i, j + 1],
         [i - 1, j], [i + 1, j],
-    ]
+    ];
 
     if (j % 2 == 1) {
         neighbors[4] = [i + 1, j - 1];
@@ -225,15 +234,17 @@ function neighborCountHex(grid, i, j) {
         neighbors[5] = [i - 1, j + 1];
     }
 
-    var neighbors = neighbors.filter(
-            function(x) { return x[0] >= 0 && x[0] < WIDTH &&
-                                 x[1] >= 0 && x[1] < HEIGHT &&
-                                 grid[x[0]][x[1]].alive; });
-
-    return neighbors.length;
+    return neighbors.filter(
+        function(x) { return x[0] >= 0 && x[0] < WIDTH &&
+                             x[1] >= 0 && x[1] < HEIGHT &&
+                             grid[x[0]][x[1]].alive; });
 }
 
 function drawGrid() {
+
+    if (isColored)
+        colorGrid();
+
     context.fillStyle = COLOR_BG;
 
     if (type == "rect") {
@@ -245,11 +256,11 @@ function drawGrid() {
                 HEIGHT * Math.sqrt(3) * CELL_R + CELL_R);
     }
 
-    context.fillStyle = COLOR_FG;
-
     for (var i = 0; i < WIDTH; i++) {
         for (var j = 0; j < HEIGHT; j++) {
             if (grid[i][j].alive) {
+                context.fillStyle = grid[i][j].color;
+
                 if (type == "hex") {
                     drawCellAsCircle(context, i, j);
                 }
@@ -259,6 +270,62 @@ function drawGrid() {
             }
         }
     }
+}
+
+function colorGrid() {
+    while (notAllFilled()) {
+        nextFloodFill();
+    }
+}
+
+function notAllFilled() {
+    for (var i = 0; i < WIDTH; i++) {
+        for (var j = 0; j < HEIGHT; j++) {
+            if (grid[i][j].alive && grid[i][j].color == COLOR_FG) {
+                return true;
+            }
+        }
+    }
+
+    return false;
+}
+
+function nextFloodFill() {
+    for (var i = 0; i < WIDTH; i++) {
+        for (var j = 0; j < HEIGHT; j++) {
+            if (grid[i][j].alive && grid[i][j].color == COLOR_FG) {
+                floodfill(i, j, COLOR_FG, nextColor());
+                return;
+            }
+        }
+    }
+}
+
+function floodfill(i, j, targetColor, replacementColor) {
+    q = [];
+
+    grid[i][j].color = replacementColor;
+    q.push([i, j]);
+
+    while (q.length != 0) {
+        n = q.shift();
+        neighbors = liveNeighborsHex(grid, n[0], n[1]);
+        for (ii = 0; ii < neighbors.length; ii++) {
+            nn = neighbors[ii];
+            if (grid[nn[0]][nn[1]].color == targetColor) {
+                grid[nn[0]][nn[1]].color = replacementColor;
+                q.push(nn);
+            }
+        }
+    }
+}
+
+function nextColor() {
+    color_i++;
+    if (color_i == COLORS.length) {
+        color_i = 0;
+    }
+    return COLORS[color_i];
 }
 
 function drawCellAsRect(context, i, j) {
