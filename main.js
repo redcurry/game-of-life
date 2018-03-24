@@ -10,9 +10,10 @@ var RULES = {born: [1, 2], survives: [2, 4]};
 var COLOR_BG = "black";
 var COLOR_FG = "white";
 
-var isColored = false; // works only for "hex"
+var isColored = true; // works only for "hex"
 var COLORS = ["red", "orange", "yellow", "green", "blue", "purple"];
 var color_i = -1;
+var floodMap = {}
 
 var type = "hex"; // "hex" or "rect"
 
@@ -294,7 +295,14 @@ function nextFloodFill() {
     for (var i = 0; i < WIDTH; i++) {
         for (var j = 0; j < HEIGHT; j++) {
             if (grid[i][j].alive && grid[i][j].color == COLOR_FG) {
-                floodfill(i, j, COLOR_FG, nextColor());
+                n = floodfill(i, j, COLOR_FG, "temp");
+                if (floodMap.hasOwnProperty(n)) {
+                    var color = floodMap[n];
+                } else {
+                    var color = nextColor();
+                    floodMap[n] = color;
+                }
+                floodfill(i, j, "temp", color);
                 return;
             }
         }
@@ -303,9 +311,11 @@ function nextFloodFill() {
 
 function floodfill(i, j, targetColor, replacementColor) {
     q = [];
+    count = 0;
 
     grid[i][j].color = replacementColor;
     q.push([i, j]);
+    count++;
 
     while (q.length != 0) {
         n = q.shift();
@@ -315,9 +325,12 @@ function floodfill(i, j, targetColor, replacementColor) {
             if (grid[nn[0]][nn[1]].color == targetColor) {
                 grid[nn[0]][nn[1]].color = replacementColor;
                 q.push(nn);
+                count++;
             }
         }
     }
+
+    return count;
 }
 
 function nextColor() {
