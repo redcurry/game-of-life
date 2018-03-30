@@ -95,7 +95,7 @@ function addEventListeners() {
         }
     });
 
-    for (var i = 1; i <= 6; i++) {
+    for (var i = 0; i <= 6; i++) {
         var bornCheckbox = document.getElementById("born" + i + "Checkbox");
         bornCheckbox.checked = RULES.born.indexOf(i) != -1;
         bornCheckbox.addEventListener("change", function(e) {
@@ -110,7 +110,7 @@ function addEventListeners() {
         });
     }
 
-    for (var i = 1; i <= 6; i++) {
+    for (var i = 0; i <= 6; i++) {
         var survivesCheckbox = document.getElementById("survives" + i + "Checkbox");
         survivesCheckbox.checked = RULES.survives.indexOf(i) != -1;
         survivesCheckbox.addEventListener("change", function(e) {
