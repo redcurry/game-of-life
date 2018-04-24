@@ -11,7 +11,7 @@ var COLOR_BG = "black";
 var COLOR_FG = "white";
 
 var isColored = true; // works only for "hex"
-var COLORS = ["red", "orange", "yellow", "green", "blue", "purple"];
+var COLORS = ["#d4dcff", "#7d83ff", "#007fff", "#1affd5"];
 var color_i = -1;
 var floodMap = {}
 
