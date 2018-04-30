@@ -264,12 +264,47 @@ function drawGrid() {
 
                 if (type == "hex") {
                     drawCellAsCircle(context, i, j);
+                    drawNeighborConnectors(context, i, j);
                 }
                 else {
                     drawCellAsRect(context, i, j);
                 }
             }
         }
+    }
+}
+
+function drawNeighborConnectors(context, i, j) {
+    xy = coords(i, j);
+
+    neighbors = liveNeighborsHex(grid, i, j);
+    for (var n = 0; n < neighbors.length; n++)
+    {
+        neighbor = neighbors[n];
+        n_xy = coords(neighbor[0], neighbor[1]);
+        angle = getAngle(xy, n_xy);
+        context.translate(xy.x, xy.y);
+        context.rotate(angle);
+        context.fillRect(0, -CELL_R, 2 * CELL_R, 2 * CELL_R);
+        context.setTransform(1, 0, 0, 1, 0, 0);
+    }
+}
+
+function getAngle(xy1, xy2) {
+    d_xy = { x: (xy2.x - xy1.x), y: (xy2.y - xy1.y) };
+    return Math.atan2(d_xy.y, d_xy.x);
+}
+
+function coords(i, j) {
+    if (j % 2 == 0) {
+        nx = i * 2 * CELL_R + CELL_R;
+        ny = j * Math.sqrt(3) * CELL_R + CELL_R;
+        return { x: nx, y: ny };
+    }
+    else {
+        nx = i * 2 * CELL_R + CELL_R + CELL_R;
+        ny = j * Math.sqrt(3) * CELL_R + CELL_R;
+        return { x: nx, y: ny };
     }
 }
 
